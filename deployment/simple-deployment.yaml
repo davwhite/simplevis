@@ -1,0 +1,75 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simplevis-deployment
+  labels:
+    app: simplevis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simplevis
+  template:
+    metadata:
+      labels:
+        app: simplevis
+    spec:
+      containers:
+      - name: simplevis
+        image: pn-50.davenet.local:8080/simplevis/simplevision:latest
+        ports:
+        # livenessProbe:
+        #   httpGet:
+        #     path: /
+        #     port: http
+        # readinessProbe:
+        #   httpGet:
+        #     path: /
+        #     port: http
+        imagePullPolicy: Always         
+        resources:
+          {}            
+        env:
+          - name: FLASK_APP
+            value: flaskr/main.py
+          - name: FLASK_ENV
+            value: development
+          - name: FLASK_DEBUG
+            value: "1"
+          - name: DB_USER
+            value: panel
+          - name: DB_PWD
+            value: panel
+          - name: DB_HOST
+            value: paneldb-service
+          - name: DB_NAME
+            value: panelextract
+
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: simplevis-service
+# spec:
+#   selector:
+#     app: simplevis
+#   ports:
+#     - protocol: TCP
+#       port: 5000
+#   readinessProbe:
+#     tcpSocket:
+#       port: 5000
+#     initialDelaySeconds: 5
+#     periodSeconds: 10
+
+# ---
+# apiVersion: route.openshift.io/v1
+# kind: Route
+# metadata:
+#   name: simplevis-route
+# spec:
+#   path: "/" 
+#   to:
+#     kind: Service
+#     name: simplevis-service
