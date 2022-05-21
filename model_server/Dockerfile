@@ -12,4 +12,4 @@ ENV FLASK_DEBUG=1
 EXPOSE 5000
 # ENV LC_ALL=en_US.utf-8
 # ENV LANG=en_US.utf-8
-# ENTRYPOINT ["/flask/main.py"]
+ENTRYPOINT ["/opt/app-root/src/flask/main.py"]
