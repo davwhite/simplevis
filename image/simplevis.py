@@ -1,5 +1,6 @@
 import cv2
 import utils
+import os
 display = utils.notebook_init()  # checks
 
 cap = cv2.VideoCapture(0)
@@ -10,6 +11,4 @@ if ret:
 	cv2.imwrite('image.jpg', frame)
 
 cap.release()
-
 img = 'image.jpg'
-display.Image('/home/davwhite/workspace/yolov5/image.jpg')
