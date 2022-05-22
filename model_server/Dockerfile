@@ -2,7 +2,7 @@ FROM ubi8/python-38:latest
 # ARG UID=1000
 
 # RUN yum -y update
-RUN pip3 install flask requests bs4 mysql-client mysql-connector flask_restful waitress
+RUN pip3 install flask requests bs4 flask_restful waitress
 COPY flask flask
 # RUN get_the_funcs.py
 ENV FLASK_APP=flask/main.py
