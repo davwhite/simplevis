@@ -35,7 +35,7 @@ def capture():
     cv2.imwrite(imname, frame)
   cap.release()
 
-  curlcmd = "curl -v -u ",nexus_user,":",nexus_pass," --upload-file ",impath," ", nexus_url, "/incoming/"
+  curlcmd = "curl -v -u ",nexus_user,":",nexus_pass," --upload-file ",impath," ", nexus_url, "/repository/simplevis-artifacts/incoming/"
   curler = ''.join(''.join(elems) for elems in curlcmd)
   stream = os.popen(curler)
   output = stream.read
