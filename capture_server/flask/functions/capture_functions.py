@@ -24,9 +24,9 @@ def capture():
   nexus_user = os.getenv('NEXUS_USER')
   nexus_pass = os.getenv('NEXUS_PASS')
   nexus_url = os.getenv('NEXUS_URL')
-  ipath = ''.join(filepath)
-  impath = filepath,'/image-',date_time,'.jpg'
-  imname = ''.join(impath)
+  ipath = filepath
+  impath = filepath+'/image-'+date_time+'.jpg'
+  imname = impath
   cap = cv2.VideoCapture(0)
 
   # Capture frame
@@ -35,12 +35,12 @@ def capture():
     cv2.imwrite(imname, frame)
   cap.release()
 
-  curlcmd = "curl -v -u ",nexus_user,":",nexus_pass," --upload-file ",impath," ", nexus_url, "/repository/simplevis-artifacts/incoming/"
-  curler = ''.join(''.join(elems) for elems in curlcmd)
+  curlcmd = "curl -v -u "+nexus_user+":"+nexus_pass+" --upload-file "+impath+" "+nexus_url+"/repository/simplevis-artifacts/incoming/"
+  curler = curlcmd
   stream = os.popen(curler)
   output = stream.read
-  print(output)
-  jsondata = [impath]
+  # print(output)
+  jsondata = ['captured']
   return jsondata
 
 
