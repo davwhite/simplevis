@@ -14,46 +14,16 @@ parser = reqparse.RequestParser()
 logger = logging.getLogger('waitress')
 logger.setLevel(logging.INFO)
 
-class fList(Resource):
+class Detect(Resource):
     def get(self):
-        x = function_list()
+        x = detect()
         return jsonify(x)
 
-# class PanelStatements(Resource):
-#     def get(self, panel_id):
-#         statement_type = 'N/A'
-#         speaker = 'N/A'
-#         x = panel_statements(panel_id,statement_type,speaker)
-#         return jsonify(x)
-
-# class PanelStatementTypes(Resource):
-#     def get(self, statement_type):
-#         panel_id = 'N/A'
-#         speaker = 'N/A'
-#         x = panel_statements(panel_id,statement_type,speaker)
-#         return jsonify(x)
-
-# class PanelStatementSpeaker(Resource):
-#     def get(self, speaker):
-#         panel_id = 'N/A'
-#         statement_type = 'N/A'
-#         x = panel_statements(panel_id,statement_type,speaker)
-#         return jsonify(x)
-
-# class PanelSearch(Resource):
-#     def get(self, searchstring):
-#         x = panel_search(searchstring)
-#         return jsonify(x)
 
 ##
 ## Actually setup the Api resource routing here
 ##
-api.add_resource(fList,'/simplevis')
-# api.add_resource(Panel,'/panel_details/<panel_id>')
-# api.add_resource(PanelStatements,'/panel_statements/<panel_id>')
-# api.add_resource(PanelStatementTypes,'/panel_statements/type/<statement_type>')
-# api.add_resource(PanelStatementSpeaker,'/panel_statements/speaker/<speaker>')
-# api.add_resource(PanelSearch,'/panel_search/<searchstring>')
+api.add_resource(Detect,'/detect')
 
 
 # if __name__ == '__main__':

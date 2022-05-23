@@ -1,5 +1,6 @@
 import json
 import os
+import requests
 
 # config = {
 #   'user': os.environ.get('DB_USER'),
@@ -10,8 +11,28 @@ import os
 # }
 
 
-def function_list():
-  jsondata = ['something']
+def detect():
+  nexus_user = os.getenv('NEXUS_USER')
+  nexus_pass = os.getenv('NEXUS_PASS')
+  nexus_url = os.getenv('NEXUS_URL')
+
+  params = dict(
+      repository='simplevis-artifacts'
+  )
+
+  search_url = nexus_url,"/service/rest/v1/search"
+  surl = ''.join(''.join(elems) for elems in search_url)
+  resp = requests.get(url=surl, params=params)
+  data = resp.json() # Check the JSON Response Content documentation below
+  jsondata = []
+  item_dict = data
+  # print(len(item_dict['items']))
+  for rec in data['items']:
+    for dl in rec['assets']:
+      # print(dl['downloadUrl'])
+      jsondata.append(dl['downloadUrl'])
+
+  # jsondata = [item_dict['items'][0]]
   return jsondata
 
 # def panel_statements(panel_id, statement_type, speaker):
