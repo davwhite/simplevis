@@ -1,6 +1,7 @@
 import json
 import os
 import cv2
+from datetime import datetime
 
 # config = {
 #   'user': os.environ.get('DB_USER'),
@@ -16,11 +17,15 @@ def test():
   return jsondata
 
 def capture():
+
+  now = datetime.now() # current date and time
+  date_time = now.strftime("%Y%m%d-%H%M%S")
   filepath = os.getenv('CAPTURE_PATH')
   nexus_user = os.getenv('NEXUS_USER')
   nexus_pass = os.getenv('NEXUS_PASS')
+  nexus_url = os.getenv('NEXUS_URL')
   ipath = ''.join(filepath)
-  impath = filepath,'/image.jpg'
+  impath = filepath,'/image-',date_time,'.jpg'
   imname = ''.join(impath)
   cap = cv2.VideoCapture(0)
 
@@ -30,13 +35,12 @@ def capture():
     cv2.imwrite(imname, frame)
   cap.release()
 
-  # Upload captured image
-  curl_request = 'curl -v -u admin:admin123 --upload-file ',imname,' http://nexus-service-nexus.apps.ocp4.davenet.local/repository/simplevis-artifacts/capture/image.jpg'
-  creq = ''.join(curl_request)
-  result = os.popen(creq)
-  output = result.read()
-
-  jsondata = [output]
+  curlcmd = "curl -v -u ",nexus_user,":",nexus_pass," --upload-file ",impath," ", nexus_url, "/incoming/"
+  curler = ''.join(''.join(elems) for elems in curlcmd)
+  stream = os.popen(curler)
+  output = stream.read
+  print(output)
+  jsondata = [impath]
   return jsondata
 
 

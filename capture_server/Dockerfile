@@ -2,7 +2,7 @@ FROM ubi8/python-38:latest
 # ARG UID=1000
 
 # RUN yum -y update
-RUN pip3 install flask requests bs4 flask_restful waitress
+RUN pip3 install flask requests bs4 flask_restful waitress twine
 COPY flask flask
 
 ENV FLASK_APP=flask/main.py
@@ -11,6 +11,7 @@ ENV FLASK_DEBUG=1
 ENV CAPTURE_PATH=/tmp
 ENV NEXUS_USER=admin
 ENV NEXUS_PASS=admin123
+ENV NEXUS_URL=http://nexus-nexus.apps.ocpsno.davenet.local/repository/simplevis-artifacts
 
 EXPOSE 5000
 # ENV LC_ALL=en_US.utf-8
