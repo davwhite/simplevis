@@ -15,6 +15,7 @@ def detect():
   nexus_user = os.getenv('NEXUS_USER')
   nexus_pass = os.getenv('NEXUS_PASS')
   nexus_url = os.getenv('NEXUS_URL')
+  yolodir = os.getenv('YOLODIR')
 
   params = dict(
       repository='simplevis-artifacts'
@@ -30,7 +31,29 @@ def detect():
   for rec in data['items']:
     for dl in rec['assets']:
       # print(dl['downloadUrl'])
-      jsondata.append(dl['downloadUrl'])
+      path = dl['path']
+      durl = dl['downloadUrl']
+      imgrec = {'path': path, 'url': durl}
+      jsondata.append(imgrec)
+
+  # Download all the images
+  # Create directory if it's not there
+  ddir = yolodir,'/incoming'
+  ydir = ''.join(''.join(elems) for elems in ddir)
+  if not os.path.exists(ydir):
+    os.makedirs(ydir)
+  
+  for img in jsondata:
+    url = img['url']
+    nam = img['path']
+    r = requests.get(url, allow_redirects=True)
+    ifile = yolodir,"/",nam
+    fname = ''.join(''.join(elems) for elems in ifile)
+    open(fname, 'wb').write(r.content)
+    # Detect from uploaded images
+    dcommand = 'python $YOLODIR/detect.py --weights yolov5s.pt --img 640 --conf 0.25 --source ',fname
+    dcmd = ''.join(dcommand)
+    os.popen(dcmd)
 
   # jsondata = [item_dict['items'][0]]
   return jsondata

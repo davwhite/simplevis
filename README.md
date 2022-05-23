@@ -10,3 +10,4 @@ export CAPTURE_PATH=/tmp
 export NEXUS_USER=admin
 export NEXUS_PASS=admin123
 export NEXUS_URL=http://nexus-nexus.apps.ocpsno.davenet.local
+export YOLODIR=/root/workspace/yolov5
