@@ -23,4 +23,4 @@ RUN pip install psutil IPython
 EXPOSE 5000
 # ENV LC_ALL=en_US.utf-8
 # ENV LANG=en_US.utf-8
-#ENTRYPOINT ["/opt/app-root/src/flask/main.py"]
+ENTRYPOINT ["/opt/app-root/src/flask/main.py"]
