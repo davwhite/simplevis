@@ -1,7 +1,4 @@
 FROM ubi8/python-38:latest
-# ARG UID=1000
-
-# RUN yum -y update
 USER root
 RUN yum install -y libGL
 RUN pip3 install flask requests bs4 flask_restful waitress twine
