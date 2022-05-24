@@ -1,7 +1,5 @@
 FROM ubi8/python-38:latest
-# ARG UID=1000
 
-# RUN yum -y update
 RUN pip3 install flask requests bs4 flask_restful waitress
 RUN git clone https://github.com/ultralytics/yolov5
 WORKDIR yolov5 
@@ -11,7 +9,6 @@ RUN yum install -y libGL
 RUN pip install psutil IPython
 
 COPY flask flask
-# RUN get_the_funcs.py
 ENV FLASK_APP=flask/main.py
 ENV FLASK_ENV=development
 ENV FLASK_DEBUG=1
