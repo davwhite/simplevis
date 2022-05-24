@@ -1,15 +1,9 @@
 import json
 import os
+import shutil
 import requests
-
-# config = {
-#   'user': os.environ.get('DB_USER'),
-#   'password': os.environ.get('DB_PWD'),
-#   'host': os.environ.get('DB_HOST'),
-#   'database': os.environ.get('DB_NAME'),
-#   'raise_on_warnings': True
-# }
-
+import glob
+import subprocess
 
 def detect():
   nexus_user = os.getenv('NEXUS_USER')
@@ -21,8 +15,10 @@ def detect():
       repository='simplevis-artifacts'
   )
 
-  search_url = nexus_url,"/service/rest/v1/search"
-  surl = ''.join(''.join(elems) for elems in search_url)
+  
+  search_url = nexus_url+"/service/rest/v1/search"
+  surl = search_url
+  print(surl)
   resp = requests.get(url=surl, params=params)
   data = resp.json() # Check the JSON Response Content documentation below
   jsondata = []
@@ -31,44 +27,78 @@ def detect():
   for rec in data['items']:
     for dl in rec['assets']:
       # print(dl['downloadUrl'])
+      id = dl['id']
       path = dl['path']
-      durl = dl['downloadUrl']
-      imgrec = {'path': path, 'url': durl}
-      jsondata.append(imgrec)
+      isincoming = path.find('incoming')
+      if isincoming >=0:
+        durl = dl['downloadUrl']
+        imgrec = {'id': id,'path': path, 'url': durl}
+        jsondata.append(imgrec)
 
-  # Download all the images
+ 
   # Create directory if it's not there
-  ddir = yolodir,'/incoming'
-  ydir = ''.join(''.join(elems) for elems in ddir)
+  ddir = yolodir+'/incoming'
+  ydir = ddir
   if not os.path.exists(ydir):
     os.makedirs(ydir)
-  
+
+  # # Download all the images
+  ifiles = []
   for img in jsondata:
     url = img['url']
     nam = img['path']
     r = requests.get(url, allow_redirects=True)
-    ifile = yolodir,"/",nam
-    fname = ''.join(''.join(elems) for elems in ifile)
+    ifile = yolodir+"/"+nam
+    fname = ifile
+    # print(fname)
     open(fname, 'wb').write(r.content)
-    # Detect from uploaded images
-    dcommand = 'python $YOLODIR/detect.py --weights yolov5s.pt --img 640 --conf 0.25 --source ',fname
-    dcmd = ''.join(dcommand)
-    os.popen(dcmd)
+    ifiles.append(fname)
 
-  # jsondata = [item_dict['items'][0]]
-  return jsondata
+  # # TODO replace curl with requests
+  for ifile in ifiles:
+    curlcmd = "curl -v -u "+nexus_user+":"+nexus_pass+" --upload-file "+ifile+" "+nexus_url+"/repository/simplevis-artifacts/captured/"
+    curler = curlcmd
+    # print(curler)
+    stream = os.popen(curler)
+    output = stream.read
+    # print(output)
 
-# def panel_statements(panel_id, statement_type, speaker):
-#   if panel_id != "N/A":
-#     query = ("select statement,speaker,statement_time,statement_type from panel_statements where panel_id = '" + panel_id + "'")
-#   elif statement_type != "N/A":
-#     query = ("select a.panel_id,b.panel_title,a.speaker,a.statement,a.statement_time,a.statement_type from panel_statements a, panel_details b where a.panel_id=b.panel_id and a.statement_type = '" + statement_type + "'")
-#   elif speaker != "N/A":
-#     query = ("select a.panel_id,b.panel_title,a.speaker,a.statement,a.statement_time,a.statement_type from panel_statements a, panel_details b where a.panel_id=b.panel_id and a.speaker = '" + speaker + "'")
-#   jsondata = get_query_results(query)
-#   return jsondata
+  # # Delete downloaded captures from nexus
+  # for aid in jsondata:
+  #   delete_url = nexus_url+"/service/rest/v1/assets/"+aid['id']
+  #   durl = delete_url
+  #   resp = requests.delete(url=durl,auth = (nexus_user, nexus_pass))
+  #   print(resp)
 
-# def panel_search(searchstring):
-#   query = ("select a.panel_id, b.panel_title, a.statement, a.speaker, a.statement_time, a.statement_type from panel_statements a, panel_details b where a.panel_id=b.panel_id and match(a.statement) against ('" + searchstring +"' in natural language mode)")
-#   jsondata = get_query_results(query)
-#   return jsondata
+  # Detect from uploaded images
+  my_env = os.environ.copy()
+  my_env["YOLODIR"] = yolodir
+  # subprocess.Popen(my_command, env=my_env)
+  for cfile in ifiles:
+    dcommand = 'python '+yolodir+'/detect.py --weights yolov5s.pt --img 640 --conf 0.25 --source '+cfile
+    os.wait()
+    process = os.popen(dcommand)
+    os.wait()
+
+
+  # # Delete incoming files. TODO only delete when successful
+  # if os.path.exists(yolodir+"/incoming"):
+  #   shutil.rmtree(yolodir+"/incoming")
+
+  # Gather all the processed files
+  exfiles = glob.glob(yolodir+"/runs/detect/exp*/*.jpg")
+  
+  # TODO replace curl with requests
+  # Upload detection results
+  for xfile in exfiles:
+    curlcmd = "curl -v -u "+nexus_user+":"+nexus_pass+" --upload-file "+xfile+" "+nexus_url+"/repository/simplevis-artifacts/detected/"
+    xStream = os.popen(curlcmd)
+    xOutput = xStream.read
+    print(xOutput)
+
+  # # Delete detected files. TODO only delete when successful
+  # if os.path.exists(yolodir+"/runs"):
+  #   shutil.rmtree(yolodir+"/runs")
+
+
+  return ['imdone']

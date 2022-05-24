@@ -17,8 +17,9 @@ spec:
     spec:
       containers:
       - name: simplevis
-        image: pn-50.davenet.local:8080/simplevis/simplevision:latest
-        ports:
+        image: pn-50.davenet.local:8080/repository/simplevis/model-serv:latest
+#        ports:
+#        - contanerPort: 5000
         # livenessProbe:
         #   httpGet:
         #     path: /
@@ -27,41 +28,44 @@ spec:
         #   httpGet:
         #     path: /
         #     port: http
-        imagePullPolicy: Always         
+        imagePullPolicy: Always
+        securityContext:
+          runAsUser: 1000710000
+          runAsGroup: 1000710000
         resources:
           {}            
         env:
           - name: FLASK_APP
-            value: flaskr/main.py
+            value: flask/main.py
           - name: FLASK_ENV
             value: development
           - name: FLASK_DEBUG
             value: "1"
-          - name: DB_USER
-            value: panel
-          - name: DB_PWD
-            value: panel
-          - name: DB_HOST
-            value: paneldb-service
-          - name: DB_NAME
-            value: panelextract
+          - name: NEXUS_USER
+            value: admin
+          - name: NEXUS_PASS
+            value: admin123
+          - name: NEXUS_URL
+            value: http://nexus-nexus.apps.ocpsno.davenet.local
+          - name: YOLODIR
+            value: /opt/app-root/src/yolov5
 
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: simplevis-service
-# spec:
-#   selector:
-#     app: simplevis
-#   ports:
-#     - protocol: TCP
-#       port: 5000
-#   readinessProbe:
-#     tcpSocket:
-#       port: 5000
-#     initialDelaySeconds: 5
-#     periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simplevis-service
+spec:
+  selector:
+    app: simplevis
+  ports:
+    - protocol: TCP
+      port: 5000
+  readinessProbe:
+    tcpSocket:
+      port: 5000
+    initialDelaySeconds: 5
+    periodSeconds: 10
 
 # ---
 # apiVersion: route.openshift.io/v1
