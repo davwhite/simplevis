@@ -1,13 +1,6 @@
-FROM ubi8/python-38:latest
+FROM pn-50.davenet.local:8080/repository/simplevis/simplevis-model:latest
 
-RUN pip3 install flask requests bs4 flask_restful waitress
-RUN git clone https://github.com/ultralytics/yolov5
-WORKDIR yolov5 
-RUN pip install -r requirements.txt 
-USER root
-RUN yum install -y libGL
-RUN pip install psutil IPython
-
+WORKDIR /opt/app-root/src
 COPY flask flask
 ENV FLASK_APP=flask/main.py
 ENV FLASK_ENV=development

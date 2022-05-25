@@ -5,6 +5,10 @@ import requests
 import glob
 import subprocess
 
+def test():
+  jsondata = ['this is a test']
+  return jsondata
+
 def detect():
   nexus_user = os.getenv('NEXUS_USER')
   nexus_pass = os.getenv('NEXUS_PASS')
@@ -15,7 +19,6 @@ def detect():
       repository='simplevis-artifacts'
   )
 
-  
   search_url = nexus_url+"/service/rest/v1/search"
   surl = search_url
   print(surl)

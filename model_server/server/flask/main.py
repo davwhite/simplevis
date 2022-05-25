@@ -14,11 +14,17 @@ parser = reqparse.RequestParser()
 logger = logging.getLogger('waitress')
 logger.setLevel(logging.INFO)
 
+class Test(Resource):
+    def get(self):
+        x = test()
+        return jsonify(x)
+
 class Detect(Resource):
     def get(self):
         x = detect()
         return jsonify(x)
 
+api.add_resource(Test,'/test')
 api.add_resource(Detect,'/detect')
 
 if __name__ == "__main__":
