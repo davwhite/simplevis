@@ -1,3 +1,4 @@
+# FROM pn-50.davenet.local:8080/repository/simplevis/simplevis-model:1.0.6-aarch64 for raspberry pi
 FROM pn-50.davenet.local:8080/repository/simplevis/simplevis-model:latest
 
 WORKDIR /opt/app-root/src

@@ -1,3 +1,4 @@
+# FROM registry.access.redhat.com/ubi8/python-38:latest for raspberry pi
 FROM ubi8/python-38:latest
 USER root
 RUN yum install -y libGL
