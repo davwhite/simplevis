@@ -12,24 +12,17 @@ def capture():
   now = datetime.now() # current date and time
   date_time = now.strftime("%Y%m%d-%H%M%S")
   filepath = os.getenv('CAPTURE_PATH')
-  nexus_user = os.getenv('NEXUS_USER')
-  nexus_pass = os.getenv('NEXUS_PASS')
-  nexus_url = os.getenv('NEXUS_URL')
-  ipath = filepath
-  impath = filepath+'/image-'+date_time+'.jpg'
-  imname = impath
+  isExist = os.path.exists(filepath+'/incoming')
+  if not isExist:
+    os.mkdir(filepath+'/incoming')
+  impath = filepath+'/incoming/image-'+date_time+'.jpg'
   cap = cv2.VideoCapture(0)
 
   # Capture frame
   ret, frame = cap.read()
   if ret:
-    cv2.imwrite(imname, frame)
+    cv2.imwrite(impath, frame)
   cap.release()
 
-  curlcmd = "curl -v -u "+nexus_user+":"+nexus_pass+" --upload-file "+impath+" "+nexus_url+"/repository/simplevis-artifacts/incoming/"
-  curler = curlcmd
-  stream = os.popen(curler)
-  output = stream.read
-  # print(output)
-  jsondata = ['captured']
+  jsondata = {'captured': impath }
   return jsondata

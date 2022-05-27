@@ -1,11 +1,12 @@
 # FROM pn-50.davenet.local:8080/repository/simplevis/simplevis-model:1.0.6-aarch64 for raspberry pi
-FROM pn-50.davenet.local:8080/repository/simplevis/simplevis-model:latest
+FROM model:latest
 
 WORKDIR /opt/app-root/src
 COPY flask flask
 ENV FLASK_APP=flask/main.py
 ENV FLASK_ENV=development
 ENV FLASK_DEBUG=1
+ENV CAPTURE_PATH=/data/simplevis
 ENV NEXUS_USER=admin
 ENV NEXUS_PASS=admin123
 ENV NEXUS_URL=http://nexus-nexus.apps.ocpsno.davenet.local
