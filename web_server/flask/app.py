@@ -53,7 +53,11 @@ def detect():
 
 @app.route('/uploader', methods = ['GET', 'POST'])
 def upload_file():
-   if request.method == 'POST':
+    isExist = os.path.exists(UPLOAD_FOLDER)
+    if not isExist:
+        os.mkdir(UPLOAD_FOLDER)
+    
+    if request.method == 'POST':
       f = request.files['file']
       f.save(UPLOAD_FOLDER+'/'+f.filename)
       return render_template('index.html')
