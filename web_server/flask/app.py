@@ -9,9 +9,16 @@ import glob
 
 filepath = os.getenv('CAPTURE_PATH')
 yolodir = os.getenv('YOLODIR')
+UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER')
+ALLOWED_EXTENSIONS = {'jpg'}
 model_server = os.getenv('MODEL_SERVER')
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 app=Flask(__name__,template_folder='templates',static_folder='static')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 @app.context_processor
 def inject_user():
     infiles = glob.glob(filepath+"/incoming/*.jpg")
@@ -43,6 +50,13 @@ def capture():
 def detect():
     resp = requests.get(url=model_server+"/detect")
     return render_template('index.html')
+
+@app.route('/uploader', methods = ['GET', 'POST'])
+def upload_file():
+   if request.method == 'POST':
+      f = request.files['file']
+      f.save(UPLOAD_FOLDER+'/'+f.filename)
+      return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)

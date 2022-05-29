@@ -1,6 +1,10 @@
 # simple vision
 Simple sample computer vision demo for edge devices. This sample application is built around the yolov5 pre-trained model for object detection in a image and/or video. 
 
+## Release 1.1.0
+- Updated README.md
+- Added upload alternative for image capture
+
 ## Release 1.0.9
 - Added simple webserver for model operation
 
@@ -33,7 +37,7 @@ To enable access to an attached camera, the container must be launched with the 
 ```
 podman run -d --name <capturepodname> -p <captureport> --device /dev/video0 -v /data/simplevis:/data/simplevis <capture_image>
 podman run -d --name simplevis -p 5000:5000 --device /dev/video0 -v simplevis:/data/simplevis simplevis
-podman run -it --rm --name web-serv -p 5005:5000 -v simplevis:/opt/app-root/src/flask/static web-serv
+podman run -d --name web-serv -p 5005:5000 -v simplevis:/opt/app-root/src/flask/static web-serv
 ```
 
 ## When developing locally set the following environment variables before launching the flask app.
