@@ -1,7 +1,6 @@
 FROM ubi8/python-38:latest
-COPY flask flask
 RUN pip3 install flask requests bs4 flask_restful waitress
-
+COPY flask flask
 ENV FLASK_APP=flask/spp.py
 ENV FLASK_ENV=development
 ENV FLASK_DEBUG=1
