@@ -9,6 +9,7 @@ import glob
 
 filepath = os.getenv('CAPTURE_PATH')
 yolodir = os.getenv('YOLODIR')
+model_server = os.getenv('MODEL_SERVER')
 
 app=Flask(__name__,template_folder='templates',static_folder='static')
 @app.context_processor
@@ -35,16 +36,16 @@ def hello():
 
 @app.route('/capture')
 def capture():
-    resp = requests.get(url="http://ocpedge:5000/capture")
+    resp = requests.get(url=model_server+"/capture")
     return render_template('index.html')
 
 @app.route('/detect')
 def detect():
-    resp = requests.get(url="http://ocpedge:5000/detect")
+    resp = requests.get(url=model_server+"/detect")
     return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5001)
+    app.run(host="0.0.0.0", port=5000)
 
 
 
