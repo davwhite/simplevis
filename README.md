@@ -1,6 +1,14 @@
 # simple vision
 Simple sample computer vision demo for edge devices. This sample application is built around the yolov5 pre-trained model for object detection in a image and/or video. 
 
+## Release 1.1.2
+- Updated model dockerfile
+- Updated combined server dockerfile
+- Updated readme
+- Create incoming if not exist
+- OCP deployment
+- Added upload creation when directory not found
+
 ## Release 1.1.0
 - Updated README.md
 - Added upload alternative for image capture
