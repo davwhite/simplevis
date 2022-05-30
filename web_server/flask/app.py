@@ -58,9 +58,9 @@ def upload_file():
         os.mkdir(UPLOAD_FOLDER)
     
     if request.method == 'POST':
-      f = request.files['file']
-      f.save(UPLOAD_FOLDER+'/'+f.filename)
-      return render_template('index.html')
+        f = request.files['file']
+        f.save(UPLOAD_FOLDER+'/'+f.filename)
+        return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)
