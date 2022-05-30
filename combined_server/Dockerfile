@@ -15,5 +15,5 @@ ENV FLASK_DEBUG=1
 ENV CAPTURE_PATH=/data/simplevis
 ENV YOLODIR=/opt/app-root/src/yolov5
 
-EXPOSE 5000
+EXPOSE 5001
 ENTRYPOINT ["/opt/app-root/src/flask/main.py"]

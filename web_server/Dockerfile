@@ -7,7 +7,7 @@ ENV FLASK_ENV=development
 ENV FLASK_DEBUG=1
 ENV CAPTURE_PATH=/opt/app-root/src/flask/static
 ENV UPLOAD_FOLDER=/opt/app-root/src/flask/static/incoming
-ENV MODEL_SERVER="http://ocpedge:5000"
+ENV MODEL_SERVER="http://localhost:5001"
 
-EXPOSE 5000
+EXPOSE 5005
 ENTRYPOINT ["/opt/app-root/src/flask/app.py"]

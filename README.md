@@ -1,6 +1,11 @@
 # simple vision
 Simple sample computer vision demo for edge devices. This sample application is built around the yolov5 pre-trained model for object detection in a image and/or video. 
 
+## Release 1.1.2.1
+- Changed ports for apps
+- Updated instructions to deploy in a pod
+- Changed default connection for webserver to pod
+
 ## Release 1.1.2
 - Updated model dockerfile
 - Updated combined server dockerfile
@@ -43,9 +48,21 @@ Simple sample computer vision demo for edge devices. This sample application is 
 ## Running the capture container in podman
 To enable access to an attached camera, the container must be launched with the "device" argument.
 ```
-podman run -d --name <capturepodname> -p <captureport> --device /dev/video0 -v /data/simplevis:/data/simplevis <capture_image>
-podman run -d --name simplevis -p 5000:5000 --device /dev/video0 -v simplevis:/data/simplevis simplevis
-podman run -d --name web-serv -p 5005:5000 -v simplevis:/opt/app-root/src/flask/static web-serv
+
+podman pod create -n simplevis -p 5001:5001 -p 5005:5005 --device /dev/video0
+
+podman run -d \
+--name simplevis-full \
+-v simplevis:/data/simplevis \
+--pod simplevis \
+simplevis-full:1.1.2.1
+
+podman run -d \
+--name simplevis-web \
+-v simplevis:/opt/app-root/src/flask/static \
+--pod simplevis \
+simplevis-web:1.1.2.1
+
 ```
 
 ## When developing locally set the following environment variables before launching the flask app.
