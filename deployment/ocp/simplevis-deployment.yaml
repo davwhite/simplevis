@@ -1,0 +1,55 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: simplevis-deployment
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: '*'
+    app.openshift.io/route-disabled: 'false'
+    deployment.kubernetes.io/revision: '1'
+  namespace: simplevis
+  labels:
+    app: simplevis
+    app.kubernetes.io/component: simplevis-model
+    app.kubernetes.io/instance: simplevis-model
+    app.kubernetes.io/name: simplevis-model
+    app.kubernetes.io/part-of: simplevis-model-app
+    app.openshift.io/runtime-namespace: simplevis
+spec:
+  restartPolicy: Never
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simplevis
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: simplevis
+        deploymentconfig: simplevis
+    spec:
+      containers:
+        - name: simplevis-model
+          image: nexus.davenet.local:8080/simplevis/fastapi:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /opt/app-root/src/simplevis-data
+              name: simplevis-data
+          resources: {}
+          env:
+            - name: ENVIRONMENT_NAME
+              value: "OpenShift"
+            - name: SIMPLEVIS_DATA
+              value: /opt/app-root/src/simplevis-data
+      volumes:
+        - name: simplevis-data
+          persistentVolumeClaim:
+            claimName: pvc-simplevis
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
